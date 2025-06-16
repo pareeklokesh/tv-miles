@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tv Miles</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script src="assets/js/chart.js"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="w-100 flex start-sec justify-center items-center hv-100">
+        <div class="">
+            <div class="text-center">
+                <img src="assets/img/logo-black.png" />
+            </div>
+            <div class="text-center flex justify-center">
+                <button id="startBtn" class="flex justify-center items-center text-white btn start-btn"><img
+                        src="assets/img/play.png" /> Start</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="step w-100">
+        <div class="header flex justify-center">
+            <img src="assets/img/logo.png" />
+        </div>
+        <div class="container">
+            <div class="w-100 flex items-center step-time-sec">
+                <div class="current-step">
+                    <p>Your Current Steps</p>
+                    <div class="w-100 current-step-value" >00:00:01</div>
+<div style="display: none;" id="timer"></div>
+                </div>
+                <img src="assets/img/refresh.png" class="refresh_img" />
+                <div class="w-100 flex items-center">
+                    <div class="current-step">
+                        <p>Your Current Distance in Miles</p>
+                        <div class="w-100 current-step-value">12 Steps</div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="w-100 flex items-center step-time-sec">
+                <div class="current-step">
+                    <p>Your Current Steps</p>
+                    <div class="w-100 current-step-value">00:00:01</div>
+
+                </div>
+                <img src="assets/img/refresh.png" class="refresh_img" />
+                <div class="w-100 flex items-center">
+                    <div class="current-step">
+                        <p>Your Current Distance in Miles</p>
+                        <div class="w-100 current-step-value">12 Steps</div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="text-center flex justify-center">
+                <button id="endBtn" class="flex justify-center items-center text-white btn start-btn"
+                    style="background: rgba(220, 53, 69, 1);"><img src="assets/img/stop.png" /> Stop</button>
+            </div>
+
+            <div id="chartContainer">
+                <canvas id="mileChart"></canvas>
+
+            </div>
+            <div id="resultText" style="display: none;"></div>
+            <div id="JPValue" style="display: none;"></div>
+
+
+            <div style="margin-bottom: 10px;display: none;">
+                <button id="restartBtn" class="btn">Zurück</button>
+
+            </div>
+
+            <div class="w-100 text-center flex justify-center items-center" style="margin-top: 25px;gap: 4px;color: rgb(40, 62, 84);">
+                <img src="assets/img/Group (1).png" /> Jackpot (€): 
+            </div>
+            <div class="text-center flex justify-center">
+                <div class="w-100 current-step-value " style="width: inherit;min-width: 200px;margin-top: 15px;">
+                     21.449
+                </div>
+            </div>
+
+            <div class="text-center flex justify-center" style="margin-bottom: 35px;">
+                <button id="endBtn" class="flex justify-center items-center text-white btn start-btn"
+                    style="background: #000;font-size: 16px;"><img src="assets/img/back.png" style="width: auto;" /> Back</button>
+            </div>
+
+        </div>
+
+
+
+        <script>
+            let startTime, interval, JpInterval;
+            let jpValue = 21.448
+
+            // Check for ongoing process
+            window.addEventListener("DOMContentLoaded", () => {
+                const storedStart = localStorage.getItem("tvMilesStartTime");
+                if (storedStart) {
+                    startTime = parseInt(storedStart, 10);
+                    interval = setInterval(updateTimer, 100);
+
+                    updateJPValueFromStoredTime(storedStart);
+
+                    startBtn.style.display = "none";
+                    document.querySelector('.start-sec').style.display = "none";
+                    timerDisplay.style.display = "block";
+                    endBtn.style.display = "inline-block";
+                }
+            });
+
+            const timerDisplay = document.getElementById("timer");
+            const startBtn = document.getElementById("startBtn");
+            const endBtn = document.getElementById("endBtn");
+            const restartBtn = document.getElementById("restartBtn");
+            const chartContainer = document.getElementById("chartContainer");
+            const resultText = document.getElementById("resultText");
+            const ctx = document.getElementById("mileChart").getContext("2d");
+            let chart;
+
+            function formatTime(ms) {
+                const seconds = (ms / 1000).toFixed(0); // 2 decimal points = steps
+                return `${seconds} Schritte`; // German for "steps"
+            }
+
+            function updateTimer() {
+                const now = Date.now();
+                const elapsed = now - startTime;
+                timerDisplay.textContent = formatTime(elapsed);
+            }
+
+
+
+            startBtn.addEventListener("click", () => {
+                startTime = Date.now();
+                localStorage.setItem("tvMilesStartTime", startTime); // Store it
+                interval = setInterval(updateTimer, 100);
+                startBtn.style.display = "none";
+                document.querySelector('.start-sec').style.display = "none";
+                timerDisplay.style.display = "block";
+                endBtn.style.display = "inline-block";
+                ShowJPValue()
+            });
+
+
+
+
+            endBtn.addEventListener("click", () => {
+                clearInterval(interval);
+                clearInterval(JpInterval);
+                localStorage.removeItem("tvMilesStartTime"); 
+
+                const elapsed = Date.now() - startTime;
+
+                const steps = (elapsed / 1000).toFixed(0);
+                const earnedMiles = (steps / 1000).toFixed(2);
+                const baseMiles = 21448;
+                const totalMiles = (parseFloat(earnedMiles) + baseMiles).toFixed(2);
+
+
+                timerDisplay.textContent = `${steps} Schritte`;
+
+                endBtn.style.display = "none";
+                resultText.textContent = `Hinterlegte Distanz: ${earnedMiles} Meilen`;
+                chartContainer.style.display = "block";
+                restartBtn.style.display = "inline-block";
+
+                renderChart(earnedMiles, totalMiles);
+            });
+
+
+            restartBtn.addEventListener("click", () => {
+                window.location.href = "https://magic-code.net/"; // quick reset
+            });
+
+            function renderChart(actualMiles, totalMiles) {
+                const jackpot = (totalMiles / 1000).toFixed(2); // in Euros
+
+                if (chart) chart.destroy();
+                chart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Dein Durchschnitt pro Tag', 'Durchschnitt aller Zuschauer pro Tag'],
+                        datasets: [{
+                            label: 'Stats',
+                            data: [actualMiles, 50],
+                            backgroundColor: ['#2980b9', '#27ae60'],
+                            borderRadius: 6
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    stepSize: 5
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            function ShowJPValue() {
+
+                document.getElementById("JPValue").innerHTML = `Jackpot (€): ${jpValue.toFixed(3)}`
+
+                JpInterval = setInterval(() => {
+                    jpValue = parseFloat(jpValue)
+                    jpValue = (jpValue + 0.001).toFixed(3)
+                    document.getElementById("JPValue").innerHTML = `Jackpot (€): ${jpValue}`
+
+                    const elapsed = Date.now() - startTime;
+
+                    const steps = (elapsed / 1000).toFixed(0);
+                    const earnedMiles = (steps / 1000).toFixed(2);
+                    resultText.textContent = `Hinterlegte Distanz: ${earnedMiles} Meilen`;
+
+                }, 2000);
+
+                const elapsed = Date.now() - startTime;
+
+                const steps = (elapsed / 1000).toFixed(0);
+                const earnedMiles = (steps / 1000).toFixed(2);
+                const baseMiles = 21448;
+                const totalMiles = (parseFloat(earnedMiles) + baseMiles).toFixed(2);
+
+
+                timerDisplay.textContent = `${steps} Schritte`;
+
+                // endBtn.style.display = "none";
+                resultText.textContent = `Hinterlegte Distanz: ${earnedMiles} Meilen`;
+                chartContainer.style.display = "block";
+                restartBtn.style.display = "inline-block";
+
+                renderChart(earnedMiles, totalMiles);
+
+
+
+            }
+
+
+            function updateJPValueFromStoredTime(storedStart) {
+                const start = parseInt(storedStart, 10);
+                const elapsedMs = Date.now() - start;
+                const elapsedSeconds = elapsedMs / 1000;
+                jpValue = 21.448 + elapsedSeconds * 0.0005; // 0.001 every 2 sec = 0.0005 per second
+                ShowJPValue()
+            }
+
+
+
+
+        </script>
+
+
+</body>
+
+</html>
