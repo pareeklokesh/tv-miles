@@ -85,7 +85,7 @@ body {
   font-size: 22px;
   padding: 8px 5px;
 }
-.refresh_img {
+.refresh-icon {
   margin-top: 30px;
   margin-left: 20px;
   margin-right: 20px;
@@ -102,6 +102,21 @@ body {
 }
 #timer {
     display: none !important;
+}
+.refresh_img {
+  width: 50px;
+}
+.refresh_img {
+  animation: spin 3s linear infinite; 
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 @media (max-width: 767px) {
@@ -123,11 +138,28 @@ body {
 .step-time-sec {
   margin-top: 0;
 }
-.refresh_img {
+.refresh-icon {
   margin-top: 15px;
   margin-left: 0;
   margin-right: 0;
   margin-bottom: 15px;
+}
+.refresh-icon, .current-step-value {
+  width: 55%;
+  justify-content: center;
+  display: flex !important;
+}
+.refresh-icon {
+    width: 100%;
+    padding-left: 45%;
+}
+.refresh_img {
+  width: 25px;
+}
+.container {
+  width: 100%;
+  padding: 15px;
+  max-width: 100%;
 }
 
 }

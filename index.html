@@ -33,30 +33,38 @@
         <div class="container">
             <div class="w-100 flex items-center step-time-sec">
                 <div class="current-step">
-                    <p>Your Current Steps</p>
-                    <div class="w-100 current-step-value" >00:00:01</div>
-<div style="display: none;" id="timer"></div>
+                    <p>Total Time</p>
+                    <div id="total_time" class="w-100 current-step-value">00:00:01</div>
+                    <div style="display: none;" id="timer"></div>
                 </div>
-                <img src="assets/img/refresh.png" class="refresh_img" />
+                <div class="refresh-icon">
+                    <img src="assets/img/refresh.png" class="refresh_img" />
+                </div>
                 <div class="w-100 flex items-center">
                     <div class="current-step">
-                        <p>Your Current Distance in Miles</p>
-                        <div class="w-100 current-step-value">12 Steps</div>
+                        <p>Total Steps</p>
+                        <div id="total_steps" class="w-100 current-step-value">12 Steps</div>
 
                     </div>
+                </div>
+                <div class="refresh-icon" style="display: none;">
+                    <img src="assets/img/refresh.png" class="refresh_img" />
                 </div>
             </div>
 
             <div class="w-100 flex items-center step-time-sec">
                 <div class="current-step">
-                    <p>Your Current Steps</p>
-                    <div class="w-100 current-step-value">00:00:01</div>
+                    <p>Distance in miles </p>
+                    <div id="distance_miles" class="w-100 current-step-value">00:00:01</div>
 
                 </div>
-                <img src="assets/img/refresh.png" class="refresh_img" />
+                <div class="refresh-icon">
+                    <img src="assets/img/refresh.png" class="refresh_img" />
+                </div>
                 <div class="w-100 flex items-center">
                     <div class="current-step">
-                        <p>Your Current Distance in Miles</p>
+                        <p id="12_miles" class="flex items-center justify-center"><img
+                                src="assets/img/Group (1).png" />&nbsp;<b>Jackpot (€):</b></p>
                         <div class="w-100 current-step-value">12 Steps</div>
 
                     </div>
@@ -80,18 +88,20 @@
 
             </div>
 
-            <div class="w-100 text-center flex justify-center items-center" style="margin-top: 25px;gap: 4px;color: rgb(40, 62, 84);">
-                <img src="assets/img/Group (1).png" /> Jackpot (€): 
+            <div class="w-100 text-center flex justify-center items-center"
+                style="margin-top: 25px;gap: 4px;color: rgb(40, 62, 84);">
+                <img src="assets/img/Group (1).png" /> <b>Jackpot (€):</b>
             </div>
             <div class="text-center flex justify-center">
                 <div class="w-100 current-step-value " style="width: inherit;min-width: 200px;margin-top: 15px;">
-                     21.449
+                    21.449
                 </div>
             </div>
 
             <div class="text-center flex justify-center" style="margin-bottom: 35px;">
                 <button id="endBtn" class="flex justify-center items-center text-white btn start-btn"
-                    style="background: #000;font-size: 16px;"><img src="assets/img/back.png" style="width: auto;" /> Back</button>
+                    style="background: #000;font-size: 16px;"><img src="assets/img/back.png" style="width: auto;" />
+                    Back</button>
             </div>
 
         </div>
@@ -158,7 +168,7 @@
             endBtn.addEventListener("click", () => {
                 clearInterval(interval);
                 clearInterval(JpInterval);
-                localStorage.removeItem("tvMilesStartTime"); 
+                localStorage.removeItem("tvMilesStartTime");
 
                 const elapsed = Date.now() - startTime;
 
